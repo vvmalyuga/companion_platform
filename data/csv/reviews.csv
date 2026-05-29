@@ -1,0 +1,3 @@
+review_id,booking_id,customer_id,companion_id,rating,text,created_at
+rev-001,bkg-001,usr-201,cmp-001,5,Отличная прогулка,2026-05-29T12:00:00Z
+rev-002,bkg-002,usr-202,cmp-002,4,Хорошая тренировка,2026-05-29T13:00:00Z

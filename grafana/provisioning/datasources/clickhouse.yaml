@@ -1,12 +1,14 @@
 apiVersion: 1
 datasources:
-- name: ClickHouse
-  type: grafana-clickhouse-datasource
-  access: proxy
-  url: http://clickhouse:8123
-  jsonData:
-    protocol: http
-    defaultDatabase: default
-    username: default
-  secureJsonData:
-    password: clickhouse
+  - name: ClickHouse
+    type: grafana-clickhouse-datasource
+    access: proxy
+    url: http://clickhouse:8123
+    jsonData:
+      defaultDatabase: companion
+      server: clickhouse
+      port: 8123
+      protocol: http
+    secureJsonData:
+      password: clickhouse
+    user: default

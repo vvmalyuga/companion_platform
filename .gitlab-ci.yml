@@ -1,0 +1,49 @@
+stages: [test, lint, quality, config, build, deploy]
+
+variables:
+  DOCKER_DRIVER: overlay2
+
+test:pytest:
+  image: python:3.11
+  stage: test
+  script:
+    - pytest backend/tests spark/tests
+
+lint:python:
+  image: python:3.11
+  stage: lint
+  script:
+    - python -m compileall backend airflow spark flink kafka streaming scripts
+
+quality:csv-and-stack:
+  image: python:3.11
+  stage: quality
+  script:
+    - python scripts/validate_csv_quality.py
+    - python scripts/validate_stack_static.py
+
+config:docker-compose:
+  image: docker:27
+  stage: config
+  services: [docker:27-dind]
+  script:
+    - docker compose --env-file .env.local -f docker/docker-compose.yml config
+
+build:images:
+  image: docker:27
+  stage: build
+  services: [docker:27-dind]
+  script:
+    - docker build -t "$CI_REGISTRY_IMAGE/api:$CI_COMMIT_SHA" -f backend/Dockerfile .
+    - docker build -t "$CI_REGISTRY_IMAGE/frontend:$CI_COMMIT_SHA" -f frontend/Dockerfile .
+    - docker build -t "$CI_REGISTRY_IMAGE/event-generator:$CI_COMMIT_SHA" -f kafka/Dockerfile .
+    - docker build -t "$CI_REGISTRY_IMAGE/clickhouse-sink:$CI_COMMIT_SHA" -f streaming/Dockerfile .
+
+deploy:compose:
+  image: alpine:3.20
+  stage: deploy
+  before_script:
+    - apk add --no-cache openssh-client
+  script:
+    - echo "ssh deploy: docker compose -f docker/docker-compose.yml pull && docker compose -f docker/docker-compose.yml up -d"
+  when: manual

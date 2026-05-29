@@ -1,0 +1,4 @@
+booking_id,customer_id,companion_id,category,booking_date,status,rating,amount,created_at
+bkg-001,usr-201,cmp-001,прогулки,2026-05-29T09:00:00Z,completed,5,2400,2026-05-28T10:00:00Z
+bkg-002,usr-202,cmp-002,спорт,2026-05-29T10:00:00Z,cancelled,4,950,2026-05-28T11:00:00Z
+bkg-003,usr-203,cmp-003,мероприятия,2026-05-29T11:00:00Z,pending,5,2200,2026-05-28T12:00:00Z

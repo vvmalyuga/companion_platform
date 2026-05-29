@@ -1,11 +1,20 @@
 cube(`CompanionActivity`, {
-  sql: `SELECT * FROM companion_activity`,
+  sql: `SELECT * FROM companion.gold_business_metrics`,
+
   measures: {
-    totalEvents: { sql: `total_events`, type: `sum` },
-    avgUniqueEvents: { sql: `unique_events`, type: `avg` }
+    UserCount: { sql: `user_count`, type: `sum` },
+    BookingCount: { sql: `booking_count`, type: `sum` },
+    AvgRating: { sql: `avg_rating`, type: `avg` },
+    Revenue: { sql: `revenue`, type: `sum`, format: `currency` },
+    ActiveCompanions: { sql: `active_companions`, type: `sum` }
   },
+
   dimensions: {
-    companionId: { sql: `companion_id`, type: `string`, primaryKey: true },
-    windowStart: { sql: `window_start`, type: `time` }
+    category: { sql: `category`, type: `string` },
+    city: { sql: `city`, type: `string` },
+    age_group: { sql: `multiIf(user_count < 10, 'new', user_count < 100, 'growth', 'scale')`, type: `string` },
+    subscription_type: { sql: `subscription_type`, type: `string` },
+    booking_status: { sql: `booking_status`, type: `string` },
+    metricDate: { sql: `metric_date`, type: `time` }
   }
 });

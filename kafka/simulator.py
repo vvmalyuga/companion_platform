@@ -1,13 +1,46 @@
+import json
+import os
+import random
+import time
+from datetime import datetime, timezone
+from uuid import uuid4
 from kafka import KafkaProducer
-import json, time, random
-producer = KafkaProducer(bootstrap_servers='localhost:9093', value_serializer=lambda v: json.dumps(v).encode())
-companions = [f"C{i}" for i in range(1, 50)]
-while True:
-    evt = {
-        "event_id": f"evt-{int(time.time()*1000)}",
-        "companion_id": random.choice(companions),
-        "event_type": random.choice(["booking_created","booking_completed","profile_view"]),
-        "event_time": int(time.time()*1000)
+
+TOPIC_BY_EVENT = {
+    "user_registered": "user-events",
+    "booking_created": "booking-events",
+    "booking_cancelled": "booking-events",
+    "message_sent": "chat-events",
+    "review_added": "companion-events",
+    "companion_online": "companion-events",
+}
+EVENTS = list(TOPIC_BY_EVENT)
+
+
+def makeEvent(eventType: str) -> dict:
+    return {
+        "eventId": str(uuid4()),
+        "eventType": eventType,
+        "eventTime": datetime.now(timezone.utc).isoformat(),
+        "payload": {
+            "userId": f"usr-{random.randint(100, 999)}",
+            "customerId": f"usr-{random.randint(200, 999)}",
+            "companionId": f"cmp-{random.randint(1, 20):03d}",
+            "bookingId": f"bkg-{random.randint(1, 10000):05d}",
+            "rating": random.randint(1, 5),
+            "responseTimeSeconds": random.randint(30, 600),
+        },
     }
-    producer.send("events", evt)
-    time.sleep(0.2)
+
+
+def main() -> None:
+    producer = KafkaProducer(bootstrap_servers=os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9093"), value_serializer=lambda value: json.dumps(value, ensure_ascii=False).encode("utf-8"))
+    while True:
+        eventType = random.choice(EVENTS)
+        producer.send(TOPIC_BY_EVENT[eventType], makeEvent(eventType))
+        producer.flush()
+        time.sleep(float(os.getenv("EVENT_INTERVAL_SECONDS", "1")))
+
+
+if __name__ == "__main__":
+    main()

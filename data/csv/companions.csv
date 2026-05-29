@@ -1,0 +1,4 @@
+companion_id,user_id,name,city,age,categories,price_per_hour,rating,response_time_minutes
+cmp-001,usr-101,Анна,Москва,27,прогулки|музеи,1200,4.9,6
+cmp-002,usr-102,Илья,Санкт-Петербург,31,спорт|хобби,950,4.7,12
+cmp-003,usr-103,Мария,Казань,25,мероприятия|общение,1100,4.8,8

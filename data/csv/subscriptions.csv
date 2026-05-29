@@ -1,0 +1,3 @@
+subscription_id,user_id,subscription_type,status,monthly_price,started_at
+sub-001,usr-201,premium,active,799,2026-05-01T00:00:00Z
+sub-002,usr-202,basic,active,299,2026-05-10T00:00:00Z
