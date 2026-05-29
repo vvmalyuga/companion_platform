@@ -1,0 +1,17 @@
+#cloud-config
+users:
+  - name: ${ssh_user}
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    shell: /bin/bash
+    ssh_authorized_keys: ["${public_key}"]
+package_update: true
+packages: [docker.io, docker-compose-plugin, git, make]
+runcmd:
+  - systemctl enable --now docker
+  - ufw allow 8080/tcp
+  - ufw allow 3000/tcp
+  - ufw allow 9092/tcp
+  - ufw allow 5432/tcp
+  - ufw allow 8123/tcp
+  - ufw allow 9000/tcp
+  - ufw --force enable

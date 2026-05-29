@@ -1,0 +1,4 @@
+user_id,email,role,city,created_at
+usr-101,anna@example.com,companion,Москва,2026-05-01T00:00:00Z
+usr-201,customer@example.com,customer,Москва,2026-05-03T00:00:00Z
+usr-202,sport@example.com,customer,Санкт-Петербург,2026-05-04T00:00:00Z
