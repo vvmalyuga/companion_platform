@@ -1,0 +1,8 @@
+project: companion_performance
+registry: /home/vvmalyuga/companion-dataplatform/feast/companion_performance/registry.db
+provider: local
+offline_store:
+  type: file
+online_store:
+  type: redis
+  connection_string: localhost:6379
